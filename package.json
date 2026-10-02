@@ -1,0 +1,14 @@
+{
+  "name": "scrutineering-assistant",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 4173 --bind 0.0.0.0 --directory .",
+    "build": "node scripts/build.js",
+    "android:sync": "npm run build && node scripts/sync-android-assets.js",
+    "android:build": "npm run android:sync && gradle -p android assembleDebug",
+    "package:zip": "bash scripts/package-zip.sh",
+    "test": "node --test"
+  }
+}

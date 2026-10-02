@@ -1,0 +1,7 @@
+dist/
+node_modules/
+npm-debug.log*
+*.zip
+android/.gradle/
+android/app/build/
+android/app/src/main/assets/www/
