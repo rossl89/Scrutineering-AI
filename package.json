@@ -1,14 +1,23 @@
 {
   "name": "scrutineering-assistant",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 4173 --bind 0.0.0.0 --directory .",
+    "dev": "npm run build && python3 -m http.server 4173 --bind 0.0.0.0 --directory dist",
     "build": "node scripts/build.js",
     "android:sync": "npm run build && node scripts/sync-android-assets.js",
     "android:build": "npm run android:sync && gradle -p android assembleDebug",
     "package:zip": "bash scripts/package-zip.sh",
-    "test": "node --test"
+    "test": "node --test",
+    "start": "node server/index.js",
+    "pretest": "npm run build"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^4.10.38"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.2.5",
+    "jsdom": "^26.1.0"
   }
 }

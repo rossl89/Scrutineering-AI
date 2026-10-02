@@ -1,50 +1,10 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { pdfPageLink, searchKnowledge } from "../src/knowledge.js";
-
-test("retrieves extinguisher guidance from a natural-language question", () => {
-  const answer = searchKnowledge("Does my fire extinguisher need to be in date?");
-  assert.equal(answer?.id, "extinguisher");
-  assert.match(answer.reference, /NCR Ch\./);
-  assert.match(pdfPageLink(answer.page), /#page=158$/);
-});
-
-test("retrieves towing and battery questions", () => {
-  assert.equal(searchKnowledge("Where does the tow strap need to be?")?.id, "tow");
-  assert.equal(searchKnowledge("How must I secure the battery?")?.id, "battery");
-});
-
-test("refuses unsupported questions instead of guessing", () => {
-  assert.equal(searchKnowledge("What tyre pressure is fastest in heavy rain?"), null);
-  assert.equal(searchKnowledge("Who will win the championship?"), null);
-});
-
-test("retains amendment state and effective dates", () => {
-  assert.equal(searchKnowledge("Which helmet standards can I use?")?.amendment.state, "future");
-  assert.match(searchKnowledge("Can I use this harness?")?.amendment.label, /not verified/i);
-});
-
-test("browser entry points are safe under a GitHub Pages repository subpath", async () => {
-  const [html, manifest, worker] = await Promise.all([
-    readFile("index.html", "utf8"),
-    readFile("public/manifest.webmanifest", "utf8"),
-    readFile("public/sw.js", "utf8")
-  ]);
-  assert.match(html, /src="\.\/src\/main\.js"/);
-  assert.equal(JSON.parse(manifest).start_url, "./");
-  assert.doesNotMatch(worker, /["']\/src\//);
-});
-
-test("Android shell serves bundled assets from an HTTPS-compatible origin", async () => {
-  const [activity, manifest, workflow] = await Promise.all([
-    readFile("android/app/src/main/java/uk/org/scrutineering/assistant/MainActivity.java", "utf8"),
-    readFile("android/app/src/main/AndroidManifest.xml", "utf8"),
-    readFile(".github/workflows/build-android.yml", "utf8")
-  ]);
-  assert.match(activity, /https:\/\/" \+ APP_HOST/);
-  assert.match(activity, /shouldInterceptRequest/);
-  assert.doesNotMatch(activity, /file:\/\/\//);
-  assert.match(manifest, /android\.permission\.INTERNET/);
-  assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug\.apk/);
-});
+import test from 'node:test';import assert from 'node:assert/strict';import {indexPages,search,validateAnswer} from '../src/engine.js';import {readFile} from 'node:fs/promises';
+const doc={id:'test',kind:'base',name:'test source'};
+const pages=[{page:278,text:'CHAPTER 7 COMPETITOR VEHICLES\nAppendix 6 - Fire Extinguishers\n3.8. Their mountings must withstand a deceleration of 25g. Two metal straps are required.\nChapter 7 Appendix 6 - Fire Extinguishers'},{page:800,text:'CHAPTER 22 FUTURE REGULATION CHANGES\nAppendix 1 - Future\n1.1. Extinguisher mountings change for a future season and require further checks.'}];
+test('extracts article references and physical page numbers',()=>{const c=indexPages(pages,doc).find(c=>c.article==='3.8');assert.equal(c.page,278);assert.equal(c.reference,'Ch.7 App.6 Art.3.8');});
+test('future provisions excluded by default',()=>{const c=indexPages(pages,doc);assert.equal(search(c,'extinguisher mount').some(c=>c.future),false);assert.equal(search(c,'extinguisher mount',{includeFuture:true}).some(c=>c.future),true);});
+test('unsupported searches return nothing',()=>assert.deepEqual(search(indexPages(pages,doc),'championship winner'),[]));
+test('date filter excludes known later-effective documents',()=>{const c=indexPages(pages, {...doc,effectiveFrom:'2027-01-01'});assert.equal(search(c,'extinguisher',{date:'2026-10-02'}).length,0);});
+test('rejects fabricated citations and unsupported uncited answers',()=>{assert.throws(()=>validateAnswer({status:'supported',answer:'x',citations:['invented']},[{id:'real'}]));assert.throws(()=>validateAnswer({status:'supported',answer:'x',citations:[]},[]));});
+test('Android supports PDF chooser and JavaScript module MIME',async()=>{const s=await readFile('android/app/src/main/java/uk/org/scrutineering/assistant/MainActivity.java','utf8');assert.match(s,/onShowFileChooser/);assert.match(s,/\.mjs/);});
+test('HTML loads CSS through stylesheet link',async()=>{assert.match(await readFile('index.html','utf8'),/rel="stylesheet"/);assert.doesNotMatch(await readFile('src/main.js','utf8'),/import .*styles\.css/);});
