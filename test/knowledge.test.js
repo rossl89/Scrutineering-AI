@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {indexPages,search,validateAnswer} from '../src/engine.js';import {readFile} from 'node:fs/promises';
+const doc={id:'test',kind:'base',name:'test source'};
+const pages=[{page:278,text:'CHAPTER 7 COMPETITOR VEHICLES\nAppendix 6 - Fire Extinguishers\n3.8. Their mountings must withstand a deceleration of 25g. Two metal straps are required.\nChapter 7 Appendix 6 - Fire Extinguishers'},{page:800,text:'CHAPTER 22 FUTURE REGULATION CHANGES\nAppendix 1 - Future\n1.1. Extinguisher mountings change for a future season and require further checks.'}];
+test('extracts article references and physical page numbers',()=>{const c=indexPages(pages,doc).find(c=>c.article==='3.8');assert.equal(c.page,278);assert.equal(c.reference,'Ch.7 App.6 Art.3.8');});
+test('future provisions excluded by default',()=>{const c=indexPages(pages,doc);assert.equal(search(c,'extinguisher mount').some(c=>c.future),false);assert.equal(search(c,'extinguisher mount',{includeFuture:true}).some(c=>c.future),true);});
+test('unsupported searches return nothing',()=>assert.deepEqual(search(indexPages(pages,doc),'championship winner'),[]));
+test('date filter excludes known later-effective documents',()=>{const c=indexPages(pages, {...doc,effectiveFrom:'2027-01-01'});assert.equal(search(c,'extinguisher',{date:'2026-10-02'}).length,0);});
+test('rejects fabricated citations and unsupported uncited answers',()=>{assert.throws(()=>validateAnswer({status:'supported',answer:'x',citations:['invented']},[{id:'real'}]));assert.throws(()=>validateAnswer({status:'supported',answer:'x',citations:[]},[]));});
+test('Android supports PDF chooser and JavaScript module MIME',async()=>{const s=await readFile('android/app/src/main/java/uk/org/scrutineering/assistant/MainActivity.java','utf8');assert.match(s,/onShowFileChooser/);assert.match(s,/\.mjs/);});
+test('HTML loads CSS through stylesheet link',async()=>{assert.match(await readFile('index.html','utf8'),/rel="stylesheet"/);assert.doesNotMatch(await readFile('src/main.js','utf8'),/import .*styles\.css/);});

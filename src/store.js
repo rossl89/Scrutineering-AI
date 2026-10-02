@@ -1,0 +1,4 @@
+const dbp=new Promise((resolve,reject)=>{const r=indexedDB.open('scrutineer-documents',1);r.onupgradeneeded=()=>r.result.createObjectStore('docs',{keyPath:'id'});r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
+export async function saveDoc(doc){const db=await dbp;return new Promise((res,rej)=>{const t=db.transaction('docs','readwrite');t.objectStore('docs').put(doc);t.oncomplete=res;t.onerror=()=>rej(t.error);});}
+export async function allDocs(){const db=await dbp;return new Promise((res,rej)=>{const r=db.transaction('docs').objectStore('docs').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
+export async function removeDoc(id){const db=await dbp;return new Promise((res,rej)=>{const t=db.transaction('docs','readwrite');t.objectStore('docs').delete(id);t.oncomplete=res;t.onerror=()=>rej(t.error);});}
