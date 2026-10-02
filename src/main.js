@@ -1,4 +1,3 @@
-import "./styles.css";
 import { CHANGES_URL, PDF_URL, entries, pdfPageLink, searchKnowledge } from "./knowledge.js";
 
 const app = document.querySelector("#app");
