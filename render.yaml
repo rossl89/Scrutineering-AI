@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: scrutineering-ai
+    runtime: node
+    plan: free
+    branch: codex/build-scrutineering-assistant-v0.1
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini-2025-04-14
+      - key: APP_ACCESS_TOKEN
+        generateValue: true
+      - key: APP_ORIGIN
+        value: https://appassets.androidplatform.net

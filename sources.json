@@ -1,0 +1,34 @@
+[
+  {
+    "file": "ncr-e4.pdf",
+    "name": "NCR 2026 Edition 4",
+    "kind": "base",
+    "pages": 834,
+    "url": "https://images.engagecdn.net/motorsport-uk-website/production/knowledge-hub/National-competition-rules/2026/Edition-4/Motorsport_UK_NCR_2026_Edition_4.pdf",
+    "sha256": "779128af3ba97128614088dcd5124dad8f56536abe7249c70526e5839ee3ed35"
+  },
+  {
+    "file": "changes-january.pdf",
+    "name": "January 2026 approved changes",
+    "kind": "amendment",
+    "pages": 41,
+    "url": "https://atlas-cms.s3.eu-west-1.amazonaws.com/motorsport-wordpress/wp-content/uploads/2026/03/0-Board-Regulation-Pack-January-2026-v2.pdf",
+    "sha256": "600580a3c0ecbd1d5e63a2fbe87776ecd3dd61df9d12a51f87caf53ad6b76d08"
+  },
+  {
+    "file": "changes-march.pdf",
+    "name": "March 2026 approved changes",
+    "kind": "amendment",
+    "pages": 20,
+    "url": "https://atlas-cms.s3.eu-west-1.amazonaws.com/motorsport-wordpress/2026/07/Current-Board-Regulations-Pack-March-2026_Final-v.2.pdf",
+    "sha256": "1ea4eee04c5b3588e420f30b12d85058c80e09e397b4f27cf3a8edbbad5be6a5"
+  },
+  {
+    "file": "changes-june.pdf",
+    "name": "June 2026 approved changes",
+    "kind": "amendment",
+    "pages": 39,
+    "url": "https://atlas-cms.s3.eu-west-1.amazonaws.com/motorsport-wordpress/2026/07/Detailed-Regulations-Changes-approved-by-Board-with-accepted-amends.pdf",
+    "sha256": "a36184d560a25e79166f7d930f2a1ee122f77fe1dc1bb0e7b579c51d6a68b528"
+  }
+]

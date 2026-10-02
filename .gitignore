@@ -5,3 +5,5 @@ npm-debug.log*
 android/.gradle/
 android/app/build/
 android/app/src/main/assets/www/
+
+.source-cache/
