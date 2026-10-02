@@ -45,3 +45,11 @@ After deployment, copy the service's HTTPS URL and the generated `APP_ACCESS_TOK
 The gateway receives the question, event date, retrieved passages and source metadata, uses strict JSON output, rejects unknown citation IDs, and returns an explicit context-needed/not-established status when appropriate. Passages are treated as untrusted input. Citation checking proves the cited passage was supplied, not that a generated interpretation is correct. Read the original PDF page before making an officiating decision. Offline document search and PDF viewing work without the server.
 
 Validation covers gateway authentication, structured request settings and refusal of fabricated citations using a mocked provider. A live provider test and an on-device PDF rendering test still require credentials and a phone. No live AI deployment is included in the APK.
+
+## V0.4: broad safety questions
+
+Broad scrutineering questions now retrieve a preliminary overview across eight safety topics instead of sending general duties and safety-car operations to the AI. Each topic contains complete original NCR passages with article/page references; packet size remains within the existing eight-source, 4,000-character Worker contract. Focused component questions still use lexical retrieval. Broad overviews use article passages grouped by equipment topic rather than generic title matches.
+
+Discipline, inspection stage and championship/class fields supply context to the existing AI endpoint. The app asks for a cited preliminary overview and preserves the distinction between initial checks and later-session checks. Multiple source-page buttons expose each packet's original pages. No change to your deployed Cloudflare Worker is required.
+
+The overview is a selection of provisions from the base edition, not a human-verified complete checklist. Championship and electrified-vehicle requirements and amendment applicability remain unresolved. Regression tests use the packaged NCR to check topic coverage, quoted passage integrity, filters and the original reported question. Live-model answer quality still needs user review.
